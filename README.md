@@ -1,2 +1,2 @@
 # DeviceSensors
-Cross Library (iOS, Android, UWP) That uses Accelerometer and  Magnetometer, Altimeter etc
+Cross Library (iOS, Android, UWP) for Xamarin That uses Accelerometer and  Magnetometer, Altimeter etc
