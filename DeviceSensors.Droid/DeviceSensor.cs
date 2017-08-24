@@ -6,12 +6,15 @@ using System.Linq;
 using System.Text;
 using Android.Runtime;
 using System.Diagnostics;
+using Android.Locations;
+using Android.OS;
 
 namespace DeviceSensors
 {
-    public class DeviceSensor : Java.Lang.Object, ISensorMonitoring, ISensorEventListener
+    public class DeviceSensor : Java.Lang.Object, ISensorMonitoring, ISensorEventListener, ILocationListener
     {
         private SensorManager sensorManager;
+        private LocationManager locationManager;
         private Sensor accelerometerSensor;
         private Sensor gyroSensor;
         private Sensor compassSensor;
@@ -27,15 +30,16 @@ namespace DeviceSensors
         {
 
 #if DEBUG
-            Debug.WriteLine("Debug: Android DeviceSensor class started");
+            System.Diagnostics.Debug.WriteLine("Debug: Android DeviceSensor class started");
 #endif
 
             sensorManager = (SensorManager)Application.Context.GetSystemService(Application.SensorService);
+            locationManager = Application.Context.GetSystemService(Application.LocationService) as LocationManager;
             this.accelerometerSensor = this.sensorManager.GetDefaultSensor(Android.Hardware.SensorType.Accelerometer);
             this.gyroSensor = this.sensorManager.GetDefaultSensor(Android.Hardware.SensorType.Gyroscope);
             this.compassSensor = this.sensorManager.GetDefaultSensor(Android.Hardware.SensorType.Orientation);
             this.magnetometerSensor = this.sensorManager.GetDefaultSensor(Android.Hardware.SensorType.MagneticField);
-            this.altimeterSensor = this.sensorManager.GetDefaultSensor(Android.Hardware.SensorType.Pressure);
+            // this.altimeterSensor = this.sensorManager.GetDefaultSensor(Android.Hardware.SensorType.L);
             this.lightSensor = this.sensorManager.GetDefaultSensor(Android.Hardware.SensorType.Light);
            
                       
@@ -97,7 +101,7 @@ namespace DeviceSensors
 
                     });
 #if DEBUG
-                    Debug.WriteLine($"Accelerometer: X = {e.Values[0]}, Y = {e.Values[1]}, Z = {e.Values[2]}");
+                    System.Diagnostics.Debug.WriteLine($"Accelerometer: X = {e.Values[0]}, Y = {e.Values[1]}, Z = {e.Values[2]}");
 #endif 
                     break;
                 case SensorType.Gyroscope:
@@ -109,7 +113,7 @@ namespace DeviceSensors
                        
                     });
 #if DEBUG
-                    Debug.WriteLine($"Gyroscope: X = {e.Values[0]}, Y = {e.Values[1]}, Z = {e.Values[2]}");
+                    System.Diagnostics.Debug.WriteLine($"Gyroscope: X = {e.Values[0]}, Y = {e.Values[1]}, Z = {e.Values[2]}");
 #endif 
                     break;
                 case SensorType.Magntometer:
@@ -119,7 +123,11 @@ namespace DeviceSensors
                         SensorType = SensorType.Magntometer,
                         ValueType = ValueType.Vector
                     });
+#if DEBUG
+                    System.Diagnostics.Debug.WriteLine($"Magntometer: X = {e.Values[0]}, Y = {e.Values[1]}, Z = {e.Values[2]}");
+#endif 
                     break;
+
                 case SensorType.Barometer:
                     this.SensorValueChanged((object)this, new SensorReadingValueChangedEventArgs()
                     {
@@ -138,7 +146,7 @@ namespace DeviceSensors
                     if (this.accelerometerSensor != null)
                     {
 #if DEBUG
-                        Debug.WriteLine($"Started Sensor: (Accelerometer)");
+                        System.Diagnostics.Debug.WriteLine($"Started Sensor: (Accelerometer)");
 #endif
                         this.sensorManager.RegisterListener(this, this.accelerometerSensor, SensorDelay.Normal);
                     }
@@ -162,10 +170,13 @@ namespace DeviceSensors
                     }
                     break;
                 case SensorType.Altimeter:
-                    if (this.altimeterSensor != null)
+
+                    if (this.locationManager != null)
                     {
-                        this.sensorManager.RegisterListener(this, this.altimeterSensor, SensorDelay.Normal);
+
+                        this.locationManager.RequestLocationUpdates("gps", 3000, 2, this, Android.OS.Looper.MainLooper );
                     }
+
                     break;
             }
 
@@ -214,6 +225,10 @@ namespace DeviceSensors
                     return SensorType.Gyroscope;
                 case Android.Hardware.SensorType.Orientation:
                     return SensorType.Compass;
+                case Android.Hardware.SensorType.Pressure:
+                    return SensorType.Altimeter;
+                    
+
             }
 
             return default(SensorType);
@@ -227,6 +242,32 @@ namespace DeviceSensors
                 this.Dispose();
             }
 
+        }
+
+        public void OnLocationChanged(Location location)
+        {
+            this.SensorValueChanged((object)this, new SensorReadingValueChangedEventArgs()
+            {
+                Value = new SingleSensorValue() { Value = location.Altitude },
+                SensorType = SensorType.Altimeter,
+                ValueType = ValueType.SingleValue
+
+            });
+        }
+
+        public void OnProviderDisabled(string provider)
+        {
+            // throw new NotImplementedException();
+        }
+
+        public void OnProviderEnabled(string provider)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnStatusChanged(string provider, [GeneratedEnum] Availability status, Bundle extras)
+        {
+            //throw new NotImplementedException();
         }
     }
 }

@@ -105,8 +105,8 @@ namespace Sample.ViewModel
         public MainViewModel()
         {
             DeviceSensor = new DeviceSensors.DeviceSensor();
-            DeviceSensor.Start(DeviceSensors.SensorType.Accelerometer, 1000);
-            DeviceSensor.Start(SensorType.Altimeter, 0);
+            DeviceSensor.Start(SensorType.Accelerometer, 1000);
+            DeviceSensor.Start(SensorType.Altimeter, 1000);
             DeviceSensor.Start(SensorType.Magntometer, 0);
             DeviceSensor.Start(SensorType.Gyroscope, 0);
 
