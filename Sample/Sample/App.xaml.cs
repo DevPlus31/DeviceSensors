@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+
+using Xamarin.Forms;
+
+namespace Sample
+{
+	public partial class App : Application
+	{
+		public App ()
+		{
+			InitializeComponent();
+
+			MainPage = new Sample.MainPage();
+           
+		}
+
+		protected override void OnStart ()
+		{
+            Debug.WriteLine("Started");
+		}
+
+		protected override void OnSleep ()
+		{
+			// Handle when your app sleeps
+		}
+
+		protected override void OnResume ()
+		{
+			// Handle when your app resumes
+		}
+	}
+}

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Sample"
+             x:Class="Sample.MainPage">
+
+    <StackLayout>
+        <Label Text="Accelerometer" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="Medium" />
+	    <Label Text="{Binding X, StringFormat='X = {0}'}"   />
+        <Label Text="{Binding Y, StringFormat='Y = {0}'}" />
+        <Label Text="{Binding Z, StringFormat='Z = {0}'}" />
+        <Label Text="Altimeter" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="Medium" />
+        <Label Text="{Binding Alti, StringFormat='Altiude = {0}'}"   />
+        <Label Text="Magnetometer" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="Medium" />
+        <Label Text="{Binding MagnX, StringFormat='MagneticFieldX = {0}'}" />
+        <Label Text="{Binding MagnY, StringFormat='MagneticFieldY = {0}'}" />
+        <Label Text="{Binding MagnZ, StringFormat='MagneticFieldZ = {0}'}" />
+        <Label Text="Gyrometer" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="Medium" />
+        <Label Text="{Binding GyroX, StringFormat='AngularVelocityX = {0}'}" />
+        <Label Text="{Binding GyroY, StringFormat='AngularVelocityY = {0}'}" />
+        <Label Text="{Binding GyroZ, StringFormat='AngularVelocityZ = {0}'}" />
+
+
+    </StackLayout>
+    
+</ContentPage>
